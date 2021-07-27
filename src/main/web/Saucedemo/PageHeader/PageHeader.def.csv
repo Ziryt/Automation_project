@@ -1,0 +1,4 @@
+Cart Badge,"//*[@class='shopping_cart_badge']"
+Cart,"//*[@class='shopping_cart_container']"
+Burger menu,"//*[@id='react-burger-menu-btn']"
+Inventory link,"//*[@id='inventory_sidebar_link']"

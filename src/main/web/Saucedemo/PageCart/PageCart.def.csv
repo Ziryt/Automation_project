@@ -1,0 +1,4 @@
+Item names,"//*[@class='inventory_item_name']"
+Remove from cart,"//*[starts-with(@data-test, 'remove-#')]"
+Title,"//*[@class='title']"
+Item quantity,"//*[@class='cart_item' and .//*[contains(text(), '#')]]//*[@class='cart_quantity']"

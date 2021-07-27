@@ -1,0 +1,4 @@
+Name,Xpath
+Username input,//*[@id='user-name']
+Password input,//*[@id='password']
+Login button,//*[@id='login-button']

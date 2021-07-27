@@ -1,0 +1,9 @@
+Name,Xpath
+Robot pic,"//*[@class='peek']"
+Selected sorting,"//*[@class='active_option']"
+Item names,"//*[@class='inventory_item_name']"
+Item prices,"//*[@class='inventory_item_price']"
+Sort dropdown,"//*[@class='product_sort_container']"
+Add to cart,"//*[starts-with(@data-test, 'add-to-cart-#')]"
+Remove from cart,"//*[starts-with(@data-test, 'remove-#')]"
+Added items,"//*[@class='inventory_item' and .//button[contains(@class, 'btn_secondary')]]//*[@class='inventory_item_name']"
