@@ -1,5 +1,6 @@
 package web;
 
+import core.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterTest;
@@ -21,7 +22,7 @@ public class Web {
     @Parameters({"url"})
     @BeforeTest
     public void open(String url){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Lemuel\\IdeaProjects\\1\\src\\main\\resources\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().deleteAllCookies();
         driver.manage().window().maximize();
@@ -32,6 +33,8 @@ public class Web {
     @AfterTest
     public void close(){
         driver.quit();
+        System.out.println("Warnings: "+ Log.warnings);
     }
+
 
 }

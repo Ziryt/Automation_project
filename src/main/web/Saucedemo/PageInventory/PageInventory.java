@@ -35,7 +35,7 @@ public class PageInventory extends Field {
     }
 
     public void checkAvailableSorting(){
-        Log.check("Check default sorting type", getAllOptions("Sort dropdown"), Arrays.asList(data("Available sorting").split(", ")));
+        Log.check("Check all options in sort dropdown", getAllOptions("Sort dropdown"), Arrays.asList(data("Available sorting").split(", ")));
     }
 
     public void checkSelectedSorting(){

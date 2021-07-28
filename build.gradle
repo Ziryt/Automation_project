@@ -16,15 +16,18 @@ dependencies {
     implementation 'org.testng:testng:7.4.0'
     implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
     implementation 'org.seleniumhq.selenium:selenium-support:3.141.59'
+
+
+
 }
 
 sourceSets {
     main {
         java {
-            srcDir = ['src/main']
+            srcDir 'src/main'
         }
         resources {
-            srcDirs = ['src/main/resources']
+            srcDir 'src/main/resources'
         }
     }
 }
