@@ -39,7 +39,7 @@ public class Tests extends Web {
     }
 
     @Test(description = "Sausedemo: Shopping cart")
-    public void SD_Shopping_Cart() throws InterruptedException {
+    public void SD_Shopping_Cart() {
         Log.step("Preconditions");
         PageLogin pageLogin = PageFactory.initElements(driver, PageLogin.class);
         pageLogin.verifyLoginPage();
@@ -59,21 +59,15 @@ public class Tests extends Web {
         PageCart pageCart = PageFactory.initElements(driver, PageCart.class);
         pageCart.verifyCartPage();
         pageCart.checkItemsInCart(items);
-        Thread.sleep(500);
         Log.step("4.Remove 1 item from cart");
         items = pageCart.removeItemsFromCart(items, 1);
-        Thread.sleep(500);
         Log.step("5.Go back to inventory page, verify that item deleted from cart properly");
         pageHeader.goToInventoryPage();
-        Thread.sleep(500);
         pageInventory.verifyInventoryPage();
-        Thread.sleep(500);
         pageInventory.checkRemoveButton(items);
-        Thread.sleep(500);
         Log.step("6.Click on cart, change quantity of item to 2");
         pageHeader.clickCartButton();
         pageCart.verifyCartPage();
-        Thread.sleep(20000);
         //next method will try to change item quantity, but Sausedemo do not have possibility to do it, so test will fail
         pageCart.changeItemQuantity(2, "Sauce Labs Backpack");
     }

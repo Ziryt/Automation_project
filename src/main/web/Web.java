@@ -15,13 +15,13 @@ public class Web {
     public static WebDriver driver = null;
 
     @BeforeSuite
-    public void before(){
+    public void before() {
 
     }
 
     @Parameters({"url"})
     @BeforeTest
-    public void open(String url){
+    public void open(String url) {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().deleteAllCookies();
@@ -31,9 +31,9 @@ public class Web {
     }
 
     @AfterTest
-    public void close(){
+    public void close() {
         driver.quit();
-        System.out.println("Warnings: "+ Log.warnings);
+        System.out.println("Warnings: " + Log.warnings);
     }
 
 
