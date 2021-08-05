@@ -20,7 +20,7 @@ public class PageLogin extends Field {
     }
 
     public void verifyLoginPage() {
-        Log.check("Chec that current page is login page", isDisplayed("Login button"));
+        Log.check("Check that current page is login page", isDisplayed("Login button"));
     }
 
 
