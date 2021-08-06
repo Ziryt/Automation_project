@@ -32,13 +32,6 @@ public class Field extends Web {
         wait(500);
     }
 
-    public static void click(String element, int time) {
-        String locator = CSV.getLocator(element);
-        driver.findElement(By.xpath(locator)).click();
-        Log.log("Click at: " + locator);
-        wait(time);
-    }
-
     public static void click(String element) {
         String locator = CSV.getLocator(element);
         driver.findElement(By.xpath(locator)).click();

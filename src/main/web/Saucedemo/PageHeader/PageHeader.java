@@ -15,7 +15,7 @@ public class PageHeader extends Field {
     }
 
     private void clickBurgerMenu() {
-        click("Burger menu", 1500);
+        click("Burger menu");
     }
 
     public void goToInventoryPage() {

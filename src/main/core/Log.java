@@ -1,10 +1,10 @@
 package core;
 
+import org.testng.Reporter;
+
 import java.util.List;
 
 public class Log {
-
-    public static int warnings = 0;
 
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_RED = "\u001B[31m";
@@ -13,6 +13,8 @@ public class Log {
     private static final String ANSI_BOLD = "\u001B[1m";
     private static final String ANSI_GREY = "\u001B[90m";
     private static final String ANSI_WARNING = "\033[38;5;214m";
+
+    public static int warnings = 0;
 
     public static void check(String description, boolean actual, boolean expected) {
         check(description, String.valueOf(actual), String.valueOf(expected));
@@ -33,6 +35,7 @@ public class Log {
             System.out.printf(ANSI_BOLD + "%14s%9s", "", "Expected: " + ANSI_RESET + ANSI_GREEN + expected + ANSI_RESET);
         } else {
             warnings++;
+            Reporter.getCurrentTestResult().setStatus(2);
             System.out.println("\t\t" + ANSI_WARNING + "Warning");
             System.out.printf(ANSI_RED + ANSI_BOLD + "%16s%9s", "", "Actual: " + ANSI_RESET + ANSI_RED + actual + "\r\n");
             System.out.printf(ANSI_GREEN + ANSI_BOLD + "%14s%9s", "", "Expected: " + ANSI_RESET + ANSI_GREEN + expected + ANSI_RESET);
@@ -51,6 +54,7 @@ public class Log {
             }
         } else {
             warnings++;
+            Reporter.getCurrentTestResult().setStatus(2);
             System.out.println("\t\t" + ANSI_WARNING + "Warning");
             System.out.printf(ANSI_BOLD + ANSI_YELLOW + "%16s%-40s%-40s", "", "Actual:", ANSI_GREEN + "Expected:" + ANSI_RESET);
             System.out.println();
@@ -73,6 +77,11 @@ public class Log {
 
     public static void log(String description) {
         System.out.println("\t\t" + ANSI_GREY + description + ANSI_RESET);
+        System.out.println();
+    }
+
+    public static void assertAll() {
+        System.out.println(ANSI_WARNING + "Warnings: " + Log.warnings + ANSI_RESET);
         System.out.println();
     }
 

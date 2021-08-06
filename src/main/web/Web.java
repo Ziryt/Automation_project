@@ -4,7 +4,6 @@ import core.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 
@@ -13,11 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class Web {
 
     public static WebDriver driver = null;
-
-    @BeforeSuite
-    public void before() {
-
-    }
 
     @Parameters({"url"})
     @BeforeTest
@@ -33,7 +27,7 @@ public class Web {
     @AfterTest
     public void close() {
         driver.quit();
-        System.out.println("Warnings: " + Log.warnings);
+        Log.assertAll();
     }
 
 
