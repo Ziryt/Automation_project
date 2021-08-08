@@ -1,6 +1,6 @@
-Name,Value
-A-Z sorting,"Name (A to Z)"
-Z-A sorting,"Name (Z to A)"
-Low to high,"Price (low to high)"
-High to low,"Price (high to low)"
+Name,Text Value,Tag Value
+A-Z sorting,"NAME (A TO Z)","az"
+Z-A sorting,"Name (Z to A)","za"
+Low to high,"Price (low to high)","lohi"
+High to low,"Price (high to low)","hilo"
 Available sorting,"Name (A to Z), Name (Z to A), Price (low to high), Price (high to low)"

@@ -16,34 +16,28 @@ public class Tests extends Web {
 
     @Test(description = "Sausedemo: Filtering")
     public void SD_Filtering() {
-        Log.step("Preconditions");
-        PageLogin pageLogin = PageFactory.initElements(driver, PageLogin.class);
-        pageLogin.verifyLoginPage();
-        pageLogin.login("standard_user");
+        preconditions();
         Log.step("1.Observe products default sort on page");
         PageInventory pageInventory = PageFactory.initElements(driver, PageInventory.class);
         pageInventory.verifyInventoryPage();
         pageInventory.checkDefaultSorting();
-        pageInventory.checkItemsOrderAZ();
+        pageInventory.checkItemsOrderByName(true);
         Log.step("2.Check available types of sorting");
         pageInventory.checkAvailableSorting();
         Log.step("3.Change sorting type to \"Name (z to a)\"");
-        pageInventory.filterByNameZA();
-        pageInventory.checkItemsOrderZA();
+        pageInventory.filterByName(false);
+        pageInventory.checkItemsOrderByName(false);
         Log.step("4.Change sorting type to \"price low to high\"");
-        pageInventory.filterByPriceLH();
-        pageInventory.checkItemsOrderLH();
+        pageInventory.filterByPrice(true);
+        pageInventory.checkItemsOrderByPrice(true);
         Log.step("5.Change sorting type to \"price low to high\"");
-        pageInventory.filterByPriceHL();
-        pageInventory.checkItemsOrderHL();
+        pageInventory.filterByPrice(false);
+        pageInventory.checkItemsOrderByPrice(false);
     }
 
     @Test(description = "Sausedemo: Shopping cart")
     public void SD_Shopping_Cart() {
-        Log.step("Preconditions");
-        PageLogin pageLogin = PageFactory.initElements(driver, PageLogin.class);
-        pageLogin.verifyLoginPage();
-        pageLogin.login("standard_user");
+        preconditions();
         Log.step("1.Add 2 items to cart");
         PageInventory pageInventory = PageFactory.initElements(driver, PageInventory.class);
         pageInventory.verifyInventoryPage();
@@ -72,5 +66,11 @@ public class Tests extends Web {
         pageCart.changeItemQuantity(2, "Sauce Labs Backpack");
     }
 
+    private void preconditions() {
+        Log.step("Preconditions");
+        PageLogin pageLogin = PageFactory.initElements(driver, PageLogin.class);
+        pageLogin.verifyLoginPage();
+        pageLogin.login("standard_user");
+    }
 
 }

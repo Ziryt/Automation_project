@@ -11,31 +11,34 @@ import java.util.concurrent.TimeUnit;
 
 public class Field extends Web {
 
-    public static void set(int value, String element, String item) {
-        String locator = CSV.getLocator(element).replace("#", item);
-        Log.log("Set value: " + value + " to:" + locator);
-        driver.findElement(By.xpath(locator)).sendKeys(String.valueOf(value));
-        wait(500);
+    public void set(String value, String element) {
+        set(value, element, null);
     }
 
-    public static void set(String value, String element) {
+    public void set(int value, String element, String item) {
+        set(String.valueOf(value), element, item);
+    }
+
+    private static void set(String value, String element, String replacement) {
         String locator = CSV.getLocator(element);
+        if (replacement != null)
+            locator = locator.replace("#", replacement);
         Log.log("Set value: " + value + " to: " + locator);
         driver.findElement(By.xpath(locator)).sendKeys(value);
         wait(500);
     }
 
-    public static void click(String element, String naming) {
-        String locator = CSV.getLocator(element).replace("#", naming);
-        driver.findElement(By.xpath(locator)).click();
-        Log.log("Click at: " + locator);
-        wait(500);
+    public static void click(String element) {
+        click(element, null);
     }
 
-    public static void click(String element) {
+    public static void click(String element, String naming) {
         String locator = CSV.getLocator(element);
-        driver.findElement(By.xpath(locator)).click();
+        if (naming != null) {
+            locator = locator.replace("#", naming);
+        }
         Log.log("Click at: " + locator);
+        driver.findElement(By.xpath(locator)).click();
         wait(500);
     }
 
@@ -47,8 +50,7 @@ public class Field extends Web {
     }
 
     public static String data(String value) {
-        wait(500);
-        return CSV.getData(value, "Data");
+        return data(value, "Data");
     }
 
     public static String data(String value, String filename) {
@@ -62,26 +64,31 @@ public class Field extends Web {
         return driver.findElement(By.xpath(locator)).getText();
     }
 
-    public static List<String> getListOfItems(String element) {
+    //Redo
+
+    private static <T> T getListOf(String element, boolean replacement) {
         String locator = CSV.getLocator(element);
         List<WebElement> elements = driver.findElements(By.xpath(locator));
-        Log.log("Receiving list of items from " + elements);
-        List<String> item_names = new ArrayList<>();
-        for (WebElement webElement : elements) {
-            item_names.add(webElement.getText());
+        Log.log("Receiving list from " + elements);
+        if (!replacement) {
+            List<String> items_list = new ArrayList<>();
+            for (WebElement webElement : elements)
+                items_list.add(webElement.getText());
+            return (T) items_list;
+        } else {
+            List<Float> items_list = new ArrayList<>();
+            for (WebElement webElement : elements)
+                items_list.add(Float.parseFloat(webElement.getText().replace("$", "")));
+            return (T) items_list;
         }
-        return item_names;
+    }
+
+    public static List<String> getListOfItems(String element) {
+        return getListOf(element, false);
     }
 
     public static List<Float> getListOfItemsPrices(String element) {
-        String locator = CSV.getLocator(element);
-        List<WebElement> elements = driver.findElements(By.xpath(locator));
-        Log.log("Receiving list of items from " + elements);
-        List<Float> item_prices = new ArrayList<>();
-        for (WebElement webElement : elements) {
-            item_prices.add(Float.parseFloat(webElement.getText().replace("$", "")));
-        }
-        return item_prices;
+        return getListOf(element, true);
     }
 
     public static void selectDropDownValue(String dropdown, String value) {

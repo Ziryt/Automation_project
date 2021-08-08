@@ -81,7 +81,9 @@ public class Log {
     }
 
     public static void assertAll() {
-        System.out.println(ANSI_WARNING + "Warnings: " + Log.warnings + ANSI_RESET);
+        if (warnings > 0)
+            System.out.println(ANSI_WARNING + "Warnings: " + Log.warnings + ANSI_RESET);
+        else System.out.println(ANSI_GREEN + "Warnings: " + Log.warnings + ANSI_RESET);
         System.out.println();
     }
 

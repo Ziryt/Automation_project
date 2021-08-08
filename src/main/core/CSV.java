@@ -1,55 +1,59 @@
 package core;
 
 import com.opencsv.CSVReader;
-import web.Saucedemo.PageLogin.PageLogin;
 
 import java.io.FileReader;
 import java.io.IOException;
 
 public class CSV {
 
-    protected static String getLocator(String element) {
-        String path = "src/main/" + Thread.currentThread().getStackTrace()[3].getClassName().replace(".", "/") + ".def.csv";
-        String locator = null;
-        Log.log("Parsing " + path + "for " + element + " locator");
+    private static String getPath() {
+        String classpath = null;
+        boolean found = false;
+        for (int i = 0; !found; i++) {
+            if (Thread.currentThread().getStackTrace()[i].getClassName().matches(".+(\\.Page)\\w+$")) {
+                classpath = Thread.currentThread().getStackTrace()[i].getClassName();
+                found = true;
+            }
+        }
+        return classpath;
+    }
+
+    private static String searchInFile(String place, String target) {
+        String result = null;
         try {
-            CSVReader reader = new CSVReader(new FileReader(path));
+            CSVReader reader = new CSVReader(new FileReader(place));
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
-                if (nextLine[0].equals(element)) {
-                    locator = nextLine[1];
+                if (nextLine[0].equals(target)) {
+                    result = nextLine[1];
                     break;
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return result;
+    }
 
-        if (locator != null)
-            return locator;
-        else throw new java.lang.Error("element was not found");
+    protected static String getLocator(String element) {
+        return getData(element, null);
     }
 
 
-    protected static String getData(String name, String filename) {
-        String classpath = Thread.currentThread().getStackTrace()[3].getClassName();
-        String path = "src/main/" + classpath.replace(".", "/").substring(0, classpath.lastIndexOf(".") + 1) + filename + ".csv";
-        String password = null;
-        Log.log("Parsing " + path + "for " + name + " data");
-        try {
-            CSVReader reader = new CSVReader(new FileReader(path));
-            String[] nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                if (nextLine[0].equals(name)) {
-                    password = nextLine[1];
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    protected static String getData(String lf, String filename) {
+        String classpath = getPath();
+        String path;
+        if (filename != null) {
+            path = String.format("src/main/%s%s.csv", classpath.replace(".", "/").substring(0, classpath.lastIndexOf(".") + 1), filename);
+            Log.log("Parsing " + path + " for " + lf + " data");
+        } else {
+            path = String.format("src/main/%s.def.csv", getPath().replace(".", "/"));
+            Log.log(String.format("Parsing %s for %s locator", path, lf));
         }
-        if (password != null)
-            return password;
-        else throw new java.lang.Error("data was not found");
+        String data = searchInFile(path, lf);
+        if (data != null)
+            return data;
+        else throw new java.lang.Error(String.format("\"%s\" was not found in %s \r\n", lf, path));
     }
 }

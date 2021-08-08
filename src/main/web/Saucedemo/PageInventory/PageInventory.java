@@ -14,20 +14,12 @@ public class PageInventory extends Field {
         Log.check("Check that current page is inventory page", isDisplayed("Robot pic"));
     }
 
-    public void filterByPriceLH() {
-        selectDropDownValue("Sort dropdown", "lohi");
+    public void filterByPrice(boolean ascending) {
+        selectDropDownValue("Sort dropdown", ascending ? "lohi" : "hilo");
     }
 
-    public void filterByPriceHL() {
-        selectDropDownValue("Sort dropdown", "hilo");
-    }
-
-    public void filterByNameAZ() {
-        selectDropDownValue("Sort dropdown", "az");
-    }
-
-    public void filterByNameZA() {
-        selectDropDownValue("Sort dropdown", "za");
+    public void filterByName(boolean ascending) {
+        selectDropDownValue("Sort dropdown", ascending ? "az" : "za");
     }
 
     public void checkDefaultSorting() {
@@ -38,38 +30,25 @@ public class PageInventory extends Field {
         Log.check("Check all options in sort dropdown", getAllOptions("Sort dropdown"), Arrays.asList(data("Available sorting").split(", ")));
     }
 
-    public void checkSelectedSorting() {
-        // Log.check("Checking selected sorting type", getText("Selected sorting"));
+    public void checkItemsOrderByName(boolean ascending) {
+
+        List<String> list_actual, list_expected;
+        list_actual = list_expected = getListOfItems("Item names");
+        Collections.sort(list_expected);
+        String description = ascending ? "name (a to z)" : "name (z to a)";
+        if (!ascending)
+            Collections.reverse(list_expected);
+        Log.check("Check that items sorted by " + description, list_actual, list_expected);
     }
 
-    public void checkItemsOrderAZ() {
-        List<String> list_actual = getListOfItems("Item names");
-        List<String> list_expected = getListOfItems("Item names");
+    public void checkItemsOrderByPrice(boolean ascending) {
+        List<Float> list_actual, list_expected;
+        list_actual = list_expected = getListOfItemsPrices("Item prices");
         Collections.sort(list_expected);
-        Log.check("Check that items sorted by name (a-z)", list_actual, list_expected);
-    }
-
-    public void checkItemsOrderZA() {
-        List<String> list_expected = getListOfItems("Item names");
-        List<String> list_actual = getListOfItems("Item names");
-        Collections.sort(list_expected);
-        Collections.reverse(list_expected);
-        Log.check("Check that items sorted by name (z-a)", list_actual, list_expected);
-    }
-
-    public void checkItemsOrderLH() {
-        List<Float> list_actual = getListOfItemsPrices("Item prices");
-        List<Float> list_expected = getListOfItemsPrices("Item prices");
-        Collections.sort(list_expected);
-        Log.check("Check that items sorted by name (low to high)", list_actual, list_expected);
-    }
-
-    public void checkItemsOrderHL() {
-        List<Float> list_actual = getListOfItemsPrices("Item prices");
-        List<Float> list_expected = getListOfItemsPrices("Item prices");
-        Collections.sort(list_expected);
-        Collections.reverse(list_expected);
-        Log.check("Check that items sorted by price (high to low)", list_actual, list_expected);
+        String description = ascending ? "price (low to high)" : "price (high to low)";
+        if (!ascending)
+            Collections.reverse(list_expected);
+        Log.check("Check that items sorted by " + description, list_actual, list_expected);
     }
 
     public void addItemsToCart(List<String> items) {
