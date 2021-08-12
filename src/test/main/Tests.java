@@ -14,6 +14,16 @@ import java.util.List;
 
 public class Tests extends Web {
 
+    //
+    //E2e success test
+    //
+
+
+
+    //
+    //Test contains warning
+    //
+
     @Test(description = "Sausedemo: Filtering")
     public void SD_Filtering() {
         preconditions();
@@ -34,6 +44,10 @@ public class Tests extends Web {
         pageInventory.filterByPrice(false);
         pageInventory.checkItemsOrderByPrice(false);
     }
+
+    //
+    //Next test has fail condition
+    //
 
     @Test(description = "Sausedemo: Shopping cart")
     public void SD_Shopping_Cart() {
@@ -62,7 +76,9 @@ public class Tests extends Web {
         Log.step("6.Click on cart, change quantity of item to 2");
         pageHeader.clickCartButton();
         pageCart.verifyCartPage();
+
         //next method will try to change item quantity, but Sausedemo do not have possibility to do it, so test will fail
+
         pageCart.changeItemQuantity(2, "Sauce Labs Backpack");
     }
 

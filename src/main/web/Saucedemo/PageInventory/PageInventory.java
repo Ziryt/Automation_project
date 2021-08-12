@@ -15,11 +15,11 @@ public class PageInventory extends Field {
     }
 
     public void filterByPrice(boolean ascending) {
-        selectDropDownValue("Sort dropdown", ascending ? "lohi" : "hilo");
+        selectDropDownValue("Sort dropdown", ascending ? data("Low to high", "Tag Value") : data("High to low", "Tag Value"));
     }
 
     public void filterByName(boolean ascending) {
-        selectDropDownValue("Sort dropdown", ascending ? "az" : "za");
+        selectDropDownValue("Sort dropdown", ascending ? data("A-Z sorting", "Tag Value") : data("Z-A sorting", "Tag Value"));
     }
 
     public void checkDefaultSorting() {
