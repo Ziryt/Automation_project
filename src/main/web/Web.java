@@ -3,31 +3,34 @@ package web;
 import core.Log;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Parameters;
-
-import java.util.concurrent.TimeUnit;
+import org.testng.annotations.*;
 
 public class Web {
 
     public static WebDriver driver = null;
 
-    @Parameters({"url"})
-    @BeforeTest
-    public void open(String url) {
+    @BeforeSuite
+    public void initiate() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
         driver = new ChromeDriver();
+    }
+
+    @Parameters({"url"})
+    @BeforeMethod
+    public void open(String url) {
         driver.manage().deleteAllCookies();
         driver.manage().window().maximize();
         driver.get(url);
-        driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
     }
 
-    @AfterTest
+    @AfterMethod
     public void close() {
-        driver.quit();
         Log.assertAll();
+    }
+
+    @AfterSuite
+    public void quit() {
+        driver.quit();
     }
 
 

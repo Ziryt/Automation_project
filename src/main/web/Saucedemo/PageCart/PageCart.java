@@ -17,6 +17,10 @@ public class PageCart extends Field {
         Log.check("Check that items in cart correspond to selected previously", list_actual, items);
     }
 
+    public void checkItemInCart(String item) {
+        Log.check("Check that item in cart correspond to selected previously", getText("Item names"), item);
+    }
+
     public List<String> removeItemsFromCart(List<String> items, int amount) {
         for (int i = 0; i < amount; i++) {
             click("Remove from cart", items.get(i).toLowerCase().replace(" ", "-"));
@@ -27,6 +31,10 @@ public class PageCart extends Field {
 
     public void changeItemQuantity(int value, String item) {
         set(value, "Item quantity", item);
+    }
+
+    public void checkout() {
+        click("Checkout");
     }
 
 

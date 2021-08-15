@@ -1,0 +1,6 @@
+Name,Xpath
+First Name,"//*[@id="first-name"]"
+Last Name,"//*[@id="last-name"]"
+Zip code,"//*[@id="postal-code"]"
+Continue,"//*[@id="continue"]"
+Cancel,"//*[@id="cancel"]"

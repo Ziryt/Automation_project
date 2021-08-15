@@ -33,7 +33,8 @@ public class PageInventory extends Field {
     public void checkItemsOrderByName(boolean ascending) {
 
         List<String> list_actual, list_expected;
-        list_actual = list_expected = getListOfItems("Item names");
+        list_actual = getListOfItems("Item names");
+        list_expected = getListOfItems("Item names");
         Collections.sort(list_expected);
         String description = ascending ? "name (a to z)" : "name (z to a)";
         if (!ascending)
@@ -43,7 +44,8 @@ public class PageInventory extends Field {
 
     public void checkItemsOrderByPrice(boolean ascending) {
         List<Float> list_actual, list_expected;
-        list_actual = list_expected = getListOfItemsPrices("Item prices");
+        list_actual = getListOfItemsPrices("Item prices");
+        list_expected = getListOfItemsPrices("Item prices");
         Collections.sort(list_expected);
         String description = ascending ? "price (low to high)" : "price (high to low)";
         if (!ascending)
@@ -55,6 +57,10 @@ public class PageInventory extends Field {
         for (String item : items) {
             click("Add to cart", item.toLowerCase().trim().replace(" ", "-"));
         }
+    }
+
+    public void addItemToCart(String item) {
+        click("Add to cart", item.toLowerCase().trim().replace(" ", "-"));
     }
 
     public void checkRemoveButton(List<String> items) {

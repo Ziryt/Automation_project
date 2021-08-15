@@ -2,6 +2,7 @@ package core;
 
 import org.testng.Reporter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Log {
@@ -14,7 +15,9 @@ public class Log {
     private static final String ANSI_GREY = "\u001B[90m";
     private static final String ANSI_WARNING = "\033[38;5;214m";
 
-    public static int warnings = 0;
+    private static String buffered_step;
+    private static List<String> warnings = new ArrayList<>();
+    private static int warning_count = 0;
 
     public static void check(String description, boolean actual, boolean expected) {
         check(description, String.valueOf(actual), String.valueOf(expected));
@@ -29,50 +32,57 @@ public class Log {
     }
 
     public static void check(String description, String actual, String expected) {
-        System.out.println("\t\t" + description);
+        String log = "\t\t" + description + "\r\n";
         if (actual.equals(expected)) {
-            System.out.printf(ANSI_GREEN + ANSI_BOLD + "%16s%9s", "", "Actual: " + ANSI_RESET + ANSI_GREEN + actual + "\r\n");
-            System.out.printf(ANSI_BOLD + "%14s%9s", "", "Expected: " + ANSI_RESET + ANSI_GREEN + expected + ANSI_RESET);
+            log += String.format(ANSI_GREEN + ANSI_BOLD + "%16s%9s", "", "Actual: " + ANSI_RESET + ANSI_GREEN + actual + "\r\n");
+            log += String.format(ANSI_BOLD + "%14s%9s", "", "Expected: " + ANSI_RESET + ANSI_GREEN + expected + ANSI_RESET + "\r\n");
+            System.out.println(log);
         } else {
-            warnings++;
+            warning_count++;
             Reporter.getCurrentTestResult().setStatus(2);
-            System.out.println("\t\t" + ANSI_WARNING + "Warning");
-            System.out.printf(ANSI_RED + ANSI_BOLD + "%16s%9s", "", "Actual: " + ANSI_RESET + ANSI_RED + actual + "\r\n");
-            System.out.printf(ANSI_GREEN + ANSI_BOLD + "%14s%9s", "", "Expected: " + ANSI_RESET + ANSI_GREEN + expected + ANSI_RESET);
+            log += "\t\t" + ANSI_WARNING + "Warning" + "\r\n";
+            log += String.format(ANSI_RED + ANSI_BOLD + "%16s%9s", "", "Actual: " + ANSI_RESET + ANSI_RED + actual + "\r\n");
+            log += String.format(ANSI_GREEN + ANSI_BOLD + "%14s%9s", "", "Expected: " + ANSI_RESET + ANSI_GREEN + expected + ANSI_RESET + "\r\n");
+            System.out.println(log);
+            warnings.add(log);
         }
-        System.out.println("\r\n");
     }
 
     public static void check(String description, List<?> actual, List<?> expected) {
-        System.out.println("\t\t" + description);
+        String log = "\t\t" + description + "\r\n";
         if (actual.equals(expected)) {
-            System.out.printf(ANSI_GREEN + ANSI_BOLD + "%16s%-40s%-40s", "", "Actual:", "Expected:" + ANSI_RESET);
-            System.out.println();
+            log += String.format(ANSI_GREEN + ANSI_BOLD + "%16s%-40s%-40s%s", "", "Actual:", "Expected:" + ANSI_RESET, "\r\n");
             for (int i = 0; i < actual.size(); i++) {
-                System.out.printf(ANSI_GREEN + "%16s%-40s%-40s", "", actual.get(i), expected.get(i) + ANSI_RESET);
-                System.out.println();
+                log += String.format(ANSI_GREEN + "%16s%-40s%-40s%s", "", actual.get(i), expected.get(i) + ANSI_RESET, "\r\n");
             }
+            System.out.println(log);
         } else {
-            warnings++;
+            warning_count++;
             Reporter.getCurrentTestResult().setStatus(2);
-            System.out.println("\t\t" + ANSI_WARNING + "Warning");
-            System.out.printf(ANSI_BOLD + ANSI_YELLOW + "%16s%-40s%-40s", "", "Actual:", ANSI_GREEN + "Expected:" + ANSI_RESET);
-            System.out.println();
+            log += "\t\t" + ANSI_WARNING + "Warning" + "\r\n";
+            log += String.format(ANSI_BOLD + ANSI_YELLOW + "%16s%-40s%-40s%s", "", "Actual:", ANSI_GREEN + "Expected:" + ANSI_RESET, "\r\n");
+
             for (int i = 0; i < actual.size(); i++) {
                 if (actual.get(i).equals(expected.get(i))) {
-                    System.out.printf(ANSI_GREEN + "%16s%-40s%-40s", "", actual.get(i), expected.get(i) + ANSI_RESET);
+                    log += String.format(ANSI_GREEN + "%16s%-40s%-40s%s", "", actual.get(i), expected.get(i) + ANSI_RESET, "\r\n");
                 } else {
-                    System.out.printf(ANSI_YELLOW + "%16s%-40s%-40s", "", actual.get(i), ANSI_GREEN + expected.get(i) + ANSI_RESET);
+                    log += String.format(ANSI_YELLOW + "%16s%-40s%-40s%s", "", actual.get(i), ANSI_GREEN + expected.get(i) + ANSI_RESET, "\r\n");
                 }
-                System.out.println();
             }
+            System.out.println(log);
+            warnings.add(log);
         }
-        System.out.println();
     }
 
     public static void step(String name) {
-        System.out.println("---------------------------------------------------------------------------------------");
-        System.out.println(">" + name + "\r\n");
+        String step = "---------------------------------------------------------------------------------------\r\n" +
+                ">" + name + "\r\n";
+        if (warnings.isEmpty() || !warnings.get(warnings.size() - 1).equals(buffered_step))
+            warnings.add(step);
+        else
+            warnings.set(warnings.size() - 1, step);
+        buffered_step = step;
+        System.out.println(step);
     }
 
     public static void log(String description) {
@@ -81,12 +91,26 @@ public class Log {
     }
 
     public static void assertAll() {
-        if (warnings > 0)
-            System.out.println(ANSI_WARNING + "Warnings: " + Log.warnings + ANSI_RESET);
-        else System.out.println(ANSI_GREEN + "Warnings: " + Log.warnings + ANSI_RESET);
+        if (warning_count > 0) {
+            removeLastIndex(warnings);
+            System.out.println(ANSI_WARNING + "Warnings: " + Log.warning_count + ANSI_RESET);
+            for (String s : warnings)
+                System.out.println(s);
+        } else System.out.println(ANSI_GREEN + "Warnings: " + Log.warning_count + ANSI_RESET);
         System.out.println();
+        clearWarns();
     }
 
+    private static void removeLastIndex(List<String> list) {
+        if (list.get(list.size() - 1).equals(buffered_step))
+            list.remove(list.size() - 1);
+    }
+
+    protected static void clearWarns() {
+        buffered_step = null;
+        warning_count = 0;
+        warnings.clear();
+    }
 
 }
 

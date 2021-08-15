@@ -37,3 +37,9 @@ sourceSets {
         }
     }
 }
+
+test {
+    useTestNG(){
+        suites '/src/test/testng.xml'
+    }
+}

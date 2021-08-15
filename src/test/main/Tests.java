@@ -4,6 +4,9 @@ import core.Log;
 import org.testng.annotations.Test;
 import org.openqa.selenium.support.PageFactory;
 import web.Saucedemo.PageCart.PageCart;
+import web.Saucedemo.PageCheckoutComplete.PageCheckoutComplete;
+import web.Saucedemo.PageCheckoutTwo.PageCheckoutTwo;
+import web.Saucedemo.PageCheckoutOne.PageCheckoutOne;
 import web.Saucedemo.PageInventory.PageInventory;
 import web.Saucedemo.PageLogin.PageLogin;
 import web.Saucedemo.PageHeader.PageHeader;
@@ -17,9 +20,31 @@ public class Tests extends Web {
     //
     //E2e success test
     //
-
-
-
+    @Test(description = "Sausedemo: E2E")
+    public void SD_E2E() {
+        preconditions();
+        Log.step("1.Observe products default sort on page");
+        PageInventory pageInventory = PageFactory.initElements(driver, PageInventory.class);
+        pageInventory.verifyInventoryPage();
+        String item = "Sauce Labs Backpack";
+        pageInventory.addItemToCart(item);
+        PageHeader pageHeader = PageFactory.initElements(driver, PageHeader.class);
+        Log.step("2.Click on shopping cart icon");
+        pageHeader.clickCartButton();
+        PageCart pageCart = PageFactory.initElements(driver, PageCart.class);
+        pageCart.verifyCartPage();
+        pageCart.checkItemInCart(item);
+        pageCart.checkout();
+        PageCheckoutOne pageCheckoutOne = PageFactory.initElements(driver, PageCheckoutOne.class);
+        pageCheckoutOne.verifyCheckoutOnetPage();
+        pageCheckoutOne.setCustomer("Tommy","Gun","123");
+        pageCheckoutOne.nestPage();
+        PageCheckoutTwo pageCheckoutTwo = PageFactory.initElements(driver, PageCheckoutTwo.class);
+        pageCheckoutTwo.verifyCheckoutTwo();
+        pageCheckoutTwo.finish();
+        PageCheckoutComplete pageCheckoutComplete = PageFactory.initElements(driver, PageCheckoutComplete.class);
+        pageCheckoutComplete.verifyCheckoutCompletePage();
+    }
     //
     //Test contains warning
     //
@@ -42,6 +67,7 @@ public class Tests extends Web {
         pageInventory.checkItemsOrderByPrice(true);
         Log.step("5.Change sorting type to \"price low to high\"");
         pageInventory.filterByPrice(false);
+        pageInventory.filterByName(false);
         pageInventory.checkItemsOrderByPrice(false);
     }
 
